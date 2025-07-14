@@ -72,7 +72,7 @@ namespace LockScreenApp.ViewModels
             var response = await _authService.LoginAsync(request);
             if (response.Success)
             {
-                _hookService.Dispose();
+                //_hookService.Dispose();
                 _shutdownService.Stop();
                 _idleService.Stop();
                 OnLoginSuccess?.Invoke(); // Trigger success event
