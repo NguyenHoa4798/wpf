@@ -38,7 +38,7 @@ namespace LockScreenApp.Services
                 int vkCode = Marshal.ReadInt32(lParam);
                 if (IsSystemKeyCombination(vkCode, wParam))
                 {
-                    return new IntPtr(1); // Block the key
+                    return new IntPtr(1);
                 }
             }
             return WinApiHelper.CallNextHookEx(_keyboardHookId, nCode, wParam, lParam);
@@ -56,12 +56,12 @@ namespace LockScreenApp.Services
             bool isAlt = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
             bool isWin = Keyboard.IsKeyDown(Key.LWin) || Keyboard.IsKeyDown(Key.RWin);
 
-            return (isCtrl && isAlt && vkCode == 0x2E) || // Ctrl+Alt+Del
-                   (isAlt && vkCode == 0x09) || // Alt+Tab
-                   (isCtrl && vkCode == 0x1B) || // Ctrl+Esc
-                   (isAlt && vkCode == 0x73) || // Alt+F4
-                   (isCtrl && Keyboard.IsKeyDown(Key.LeftShift) && vkCode == 0x1B) || // Ctrl+Shift+Esc
-                   isWin; // Win key
+            return (isCtrl && isAlt && vkCode == 0x2E) ||
+                   (isAlt && vkCode == 0x09) ||
+                   (isCtrl && vkCode == 0x1B) ||
+                   (isAlt && vkCode == 0x73) ||
+                   (isCtrl && Keyboard.IsKeyDown(Key.LeftShift) && vkCode == 0x1B) ||
+                   isWin;
         }
 
         public void Dispose()

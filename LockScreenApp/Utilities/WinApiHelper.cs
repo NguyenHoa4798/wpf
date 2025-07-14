@@ -31,5 +31,6 @@ namespace LockScreenApp.Utilities
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         public const int SW_HIDE = 0;
+        public const int SW_SHOW = 5;
     }
 }

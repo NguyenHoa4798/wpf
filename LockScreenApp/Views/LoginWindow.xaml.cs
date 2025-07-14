@@ -1,6 +1,4 @@
-﻿using LockScreenApp.Services;
-using LockScreenApp.ViewModels;
-using System.Net.Http;
+﻿using LockScreenApp.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,6 +7,7 @@ namespace LockScreenApp.Views
 {
     public partial class LoginWindow : Window
     {
+        public LoginViewModel ViewModel => DataContext as LoginViewModel;
         public LoginWindow(LoginViewModel viewModel)
         {
             InitializeComponent();
@@ -19,17 +18,6 @@ namespace LockScreenApp.Views
             DataContext = viewModel;
 
             PasswordBox.PasswordChanged += (s, e) => viewModel.Password = ((PasswordBox)s).Password;
-        }
-        public LoginWindow() : this(new LoginViewModel(
-                    new AuthenticationService(
-                        new HttpClient(),
-                        Utilities.ConfigurationManager.BuildConfiguration()
-                    ),
-                    new HookService(),
-                    new ShutdownService(Utilities.ConfigurationManager.BuildConfiguration()),
-                    new IdleTimeoutService(Utilities.ConfigurationManager.BuildConfiguration())
-                ))
-        {
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -55,6 +43,13 @@ namespace LockScreenApp.Views
                 e.Cancel = true;
             }
             base.OnClosing(e);
+        }
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox passwordBox)
+            {
+                ViewModel.Password = passwordBox.Password;
+            }
         }
     }
 }

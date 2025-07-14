@@ -1,4 +1,5 @@
-﻿using LockScreenApp.LoginModels;
+﻿// LoginViewModel.cs
+using LockScreenApp.LoginModels;
 using LockScreenApp.Services;
 using System;
 using System.ComponentModel;
@@ -18,6 +19,8 @@ namespace LockScreenApp.ViewModels
         private string _password;
         private string _errorMessage;
         private string _countdownMessage;
+
+        public event Action OnLoginSuccess; // New event for successful login
 
         public string Username
         {
@@ -59,14 +62,20 @@ namespace LockScreenApp.ViewModels
 
         private async Task LoginAsync()
         {
-            var request = new LoginRequest { username = Username, password = Password };
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+            {
+                ErrorMessage = "Please enter username and password.";
+                return;
+            }
+
+            var request = new LoginRequest { Username = Username, Password = Password };
             var response = await _authService.LoginAsync(request);
             if (response.Success)
             {
                 _hookService.Dispose();
                 _shutdownService.Stop();
                 _idleService.Stop();
-                Application.Current.Shutdown();
+                OnLoginSuccess?.Invoke(); // Trigger success event
             }
             else
             {
@@ -80,11 +89,20 @@ namespace LockScreenApp.ViewModels
             _shutdownService.Start();
             _idleService.Start();
 
+            var startTime = DateTime.Now;
             var countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             countdownTimer.Tick += (s, e) =>
             {
-                var remaining = 600 - (DateTime.Now - DateTime.Now).TotalSeconds; // Example countdown
-                CountdownMessage = $"System will shutdown in {(int)remaining} seconds.";
+                var remaining = 600 - (DateTime.Now - startTime).TotalSeconds;
+                if (remaining <= 0)
+                {
+                    CountdownMessage = "System is shutting down...";
+                    countdownTimer.Stop();
+                }
+                else
+                {
+                    CountdownMessage = $"System will shutdown in {(int)remaining} seconds.";
+                }
             };
             countdownTimer.Start();
         }
