@@ -15,7 +15,6 @@ namespace LockScreenApp
     {
         private readonly IServiceProvider _serviceProvider;
         private LoginWindow _loginWindow;
-        private LogoutOverlayWindow _logoutOverlay;
         private LogoutButtonWindow _logoutButton;
 
         public static event Action OnLogout = delegate { };
@@ -73,14 +72,8 @@ namespace LockScreenApp
 
         private void OnLoginSuccess()
         {
-            // 1. Ẩn LoginWindow
             _loginWindow?.Hide();
 
-            // 2. Tắt overlay che toàn màn hình
-            _logoutOverlay?.Close();
-            _logoutOverlay = null;
-
-            // 3. Hiện nút "Đăng xuất" nhỏ
             _logoutButton = new LogoutButtonWindow
             {
                 DataContext = _serviceProvider.GetService<MainViewModel>()
@@ -90,11 +83,9 @@ namespace LockScreenApp
 
         private void OnLogoutHandler()
         {
-            // 1. Tắt nút đăng xuất nhỏ
             _logoutButton?.Close();
             _logoutButton = null;
 
-            // 2. Show lại LoginWindow + overlay
             ShowLoginWindow();
         }
 
@@ -105,13 +96,6 @@ namespace LockScreenApp
             _loginWindow.DataContext = loginVM;
             loginVM.OnLoginSuccess += OnLoginSuccess;
             _loginWindow.Show();
-
-            // Mở lớp che toàn màn hình khi chưa đăng nhập
-            _logoutOverlay = new LogoutOverlayWindow
-            {
-                DataContext = _serviceProvider.GetService<MainViewModel>()
-            };
-            _logoutOverlay.Show();
         }
     }
 }
