@@ -86,8 +86,13 @@ namespace LockScreenApp
             _logoutButton?.Close();
             _logoutButton = null;
 
+            var shutdownService = _serviceProvider.GetService<ShutdownService>();
+            shutdownService.Stop();
+            shutdownService.ResetTimer();
+
             ShowLoginWindow();
         }
+
 
         private void ShowLoginWindow()
         {
@@ -95,6 +100,11 @@ namespace LockScreenApp
             _loginWindow = new LoginWindow(loginVM);
             _loginWindow.DataContext = loginVM;
             loginVM.OnLoginSuccess += OnLoginSuccess;
+
+            loginVM.StartServices(); 
+            var shutdownService = _serviceProvider.GetService<ShutdownService>();
+            shutdownService.Start();
+
             _loginWindow.Show();
         }
     }

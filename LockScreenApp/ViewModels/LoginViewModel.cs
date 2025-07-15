@@ -19,6 +19,7 @@ namespace LockScreenApp.ViewModels
         private string _password;
         private string _errorMessage;
         private string _countdownMessage;
+        private DispatcherTimer _countdownTimer;
 
         public event Action OnLoginSuccess; // New event for successful login
 
@@ -83,28 +84,30 @@ namespace LockScreenApp.ViewModels
             }
         }
 
-        private void StartServices()
+        public void StartServices()
         {
             _hookService.StartHooks();
             _shutdownService.Start();
             _idleService.Start();
 
+            // Khởi tạo lại countdown timer
+            _countdownTimer?.Stop();
+            _countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             var startTime = DateTime.Now;
-            var countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            countdownTimer.Tick += (s, e) =>
+            _countdownTimer.Tick += (s, e) =>
             {
                 var remaining = 600 - (DateTime.Now - startTime).TotalSeconds;
                 if (remaining <= 0)
                 {
                     CountdownMessage = "System is shutting down...";
-                    countdownTimer.Stop();
+                    _countdownTimer.Stop();
                 }
                 else
                 {
                     CountdownMessage = $"System will shutdown in {(int)remaining} seconds.";
                 }
             };
-            countdownTimer.Start();
+            _countdownTimer.Start();
         }
 
         private void OnIdleTimeout()

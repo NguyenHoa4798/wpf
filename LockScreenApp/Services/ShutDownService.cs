@@ -27,6 +27,10 @@ namespace LockScreenApp.Services
         public void ResetTimer()
         {
             _lastActivity = DateTime.Now;
+            if (!_timer.IsEnabled)
+            {
+                _timer.Start();
+            }
         }
 
         private void Timer_Tick(object sender, EventArgs e)
