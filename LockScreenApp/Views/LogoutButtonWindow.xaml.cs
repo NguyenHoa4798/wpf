@@ -10,8 +10,9 @@ namespace LockScreenApp.Views
 
             Loaded += (s, e) =>
             {
+                // Hiển thị ở góc trên bên phải
                 Left = SystemParameters.WorkArea.Right - Width - 10;
-                Top = SystemParameters.WorkArea.Bottom - Height - 10;
+                Top = SystemParameters.WorkArea.Top + 10;
             };
         }
     }

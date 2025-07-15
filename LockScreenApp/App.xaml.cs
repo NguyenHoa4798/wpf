@@ -74,10 +74,15 @@ namespace LockScreenApp
         {
             _loginWindow?.Hide();
 
+            var logoutVM = _serviceProvider.GetService<LogoutViewModel>();
+
             _logoutButton = new LogoutButtonWindow
             {
-                DataContext = _serviceProvider.GetService<LogoutViewModel>()
+                DataContext = logoutVM
             };
+
+            _logoutButton.Left = SystemParameters.WorkArea.Right - _logoutButton.Width - 20;
+            _logoutButton.Top = 20;
             _logoutButton.Show();
         }
 
@@ -106,6 +111,10 @@ namespace LockScreenApp
             shutdownService.Start();
 
             _loginWindow.Show();
+        }
+        public static T GetService<T>() where T : class
+        {
+            return ((App)Current)._serviceProvider.GetService<T>();
         }
     }
 }

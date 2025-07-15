@@ -1,16 +1,9 @@
 ﻿namespace LockScreenApp.LoginModels;
-public class GraphQLResponse<T>
-{
-    public T Data { get; set; }
-    public GraphQLError[] Errors { get; set; }
-}
-
-public class GraphQLError
-{
-    public string Message { get; set; }
-}
-
 public class SignInGraphNetResponse
+{
+    public SignInGraphNetData signInGraphNet { get; set; }
+}
+public class SignInGraphNetData
 {
     public Account Accounts { get; set; }
     public string Token { get; set; }
@@ -24,6 +17,7 @@ public class Account
     public string FullName { get; set; }
     public string Email { get; set; }
     public string Phone {  get; set; }
+    public string RoleName { get; set; }
 }
 
 public class LoginResponse

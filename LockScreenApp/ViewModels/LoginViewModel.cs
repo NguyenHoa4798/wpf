@@ -58,7 +58,6 @@ namespace LockScreenApp.ViewModels
             _idleService = idleService;
             LoginCommand = new RelayCommand(async () => await LoginAsync());
             _idleService.OnIdleTimeout += OnIdleTimeout;
-            StartServices();
         }
 
         private async Task LoginAsync()
@@ -73,10 +72,13 @@ namespace LockScreenApp.ViewModels
             var response = await _authService.LoginAsync(request);
             if (response.Success)
             {
-                //_hookService.Dispose();
+                _hookService.Dispose();
                 _shutdownService.Stop();
                 _idleService.Stop();
-                OnLoginSuccess?.Invoke(); // Trigger success event
+
+                var logoutVM = App.GetService<LogoutViewModel>();
+                logoutVM.SetAccount(response.Accounts);
+                OnLoginSuccess?.Invoke(); 
             }
             else
             {
@@ -122,7 +124,6 @@ namespace LockScreenApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
     public class RelayCommand : ICommand
     {
         private readonly Func<Task> _execute;

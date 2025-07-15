@@ -27,6 +27,7 @@ public class AuthenticationService
                             accounts {
                                 id
                                 fullName
+                                roleName
                             }
                             token
                             refreshToken
@@ -39,24 +40,35 @@ public class AuthenticationService
                     password = request.Password
                 }
             };
-            var response = await _graphQLClient.SendQueryAsync<SignInGraphNetResponse>(graphQLRequest);
+            var graphQLResponse = await _graphQLClient.SendQueryAsync<SignInGraphNetResponse>(graphQLRequest);
 
-            if (response.Errors != null && response.Errors.Any())
+            // Kiểm tra lỗi trước
+            if (graphQLResponse.Errors != null && graphQLResponse.Errors.Any())
             {
                 return new LoginResponse
                 {
                     Success = false,
-                    Message = string.Join(", ", response.Errors.Select(e => e.Message))
+                    Message = string.Join(", ", graphQLResponse.Errors.Select(e => e.Message))
                 };
             }
-            var signInData = response.Data;
+            var result = graphQLResponse.Data?.signInGraphNet;
+
+            if (result == null)
+            {
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = "No data returned from server."
+                };
+            }
+
             return new LoginResponse
             {
                 Success = true,
-                Accounts = signInData.Accounts,
-                Token = signInData.Token,
-                RefreshToken = signInData.RefreshToken,
-                IsVerifyOTP = signInData.IsVerifyOTP
+                Accounts = result.Accounts,
+                Token = result.Token,
+                RefreshToken = result.RefreshToken,
+                IsVerifyOTP = result.IsVerifyOTP
             };
         }
         catch (Exception ex)

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace LockScreenApp.Views
 {
@@ -11,6 +12,7 @@ namespace LockScreenApp.Views
         public LoginWindow(LoginViewModel viewModel)
         {
             InitializeComponent();
+            Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/appIcon.ico"));
             if (viewModel == null)
             {
                 throw new ArgumentNullException(nameof(viewModel), "ViewModel cannot be null.");
@@ -21,13 +23,8 @@ namespace LockScreenApp.Views
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F4 && (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
+            if (e.Key == Key.Enter)
             {
-                e.Handled = true; // Block Alt+F4
-            }
-            else if (e.Key == Key.Enter)
-            {
-                // Trigger LoginCommand on Enter key
                 if (DataContext is LoginViewModel vm && vm.LoginCommand?.CanExecute(null) == true)
                 {
                     vm.LoginCommand.Execute(null);
@@ -37,7 +34,6 @@ namespace LockScreenApp.Views
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            // Prevent closing via Alt+F4 or other means if desired
             if (!e.Cancel && Keyboard.IsKeyDown(Key.F4) && (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
             {
                 e.Cancel = true;
