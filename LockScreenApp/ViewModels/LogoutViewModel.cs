@@ -2,11 +2,11 @@
 
 namespace LockScreenApp.ViewModels;
 
-public class MainViewModel
+public class LogoutViewModel
 {
     public ICommand LogoutCommand { get; }
 
-    public MainViewModel()
+    public LogoutViewModel()
     {
         LogoutCommand = new RelayCommand(async () => await LogoutAsync());
     }

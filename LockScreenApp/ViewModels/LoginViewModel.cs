@@ -90,7 +90,6 @@ namespace LockScreenApp.ViewModels
             _shutdownService.Start();
             _idleService.Start();
 
-            // Khởi tạo lại countdown timer
             _countdownTimer?.Stop();
             _countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             var startTime = DateTime.Now;

@@ -60,7 +60,7 @@ namespace LockScreenApp
 
             services.AddSingleton<AuthenticationService>();
             services.AddSingleton<LoginViewModel>();
-            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<LogoutViewModel>();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -76,7 +76,7 @@ namespace LockScreenApp
 
             _logoutButton = new LogoutButtonWindow
             {
-                DataContext = _serviceProvider.GetService<MainViewModel>()
+                DataContext = _serviceProvider.GetService<LogoutViewModel>()
             };
             _logoutButton.Show();
         }
