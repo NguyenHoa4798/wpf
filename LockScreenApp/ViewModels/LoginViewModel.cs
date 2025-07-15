@@ -117,6 +117,12 @@ namespace LockScreenApp.ViewModels
             Username = string.Empty;
             Password = string.Empty;
         }
+        public void ResetState()
+        {
+            Username = string.Empty;
+            Password = string.Empty;
+            ErrorMessage = string.Empty;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 
 namespace LockScreenApp.Utilities
 {

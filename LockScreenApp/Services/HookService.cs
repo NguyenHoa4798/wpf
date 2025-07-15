@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using Application = System.Windows.Application;
 
 namespace LockScreenApp.Services
 {
